@@ -18,8 +18,8 @@ var (
 // ForecastParams are arguments for mcp-nws calls. They encode the latitude and
 // longitude to obtain a forecast for.
 type ForecastParams struct {
-	Latitude  string `json:"latitude"`
-	Longitude string `json:"longitude"`
+	Latitude  string `json:"latitude" jsonschema:"the latitude of the forecast location"`
+	Longitude string `json:"longitude" jsonschema:"the longitude of the forecast location"`
 }
 
 // ForecastResult describes the return type of the Forecast tool.
