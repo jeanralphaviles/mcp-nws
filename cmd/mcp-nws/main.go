@@ -18,8 +18,8 @@ var (
 // ForecastParams are arguments for mcp-nws calls. They encode the latitude and
 // longitude to obtain a forecast for.
 type ForecastParams struct {
-	Latitude  string `json:"latitude" jsonschema:"the latitude of the forecast location"`
-	Longitude string `json:"longitude" jsonschema:"the longitude of the forecast location"`
+	Latitude  string `json:"latitude" jsonschema:"The latitude of the forecast location."`
+	Longitude string `json:"longitude" jsonschema:"The longitude of the forecast location."`
 }
 
 // ForecastResult describes the return type of the Forecast tool.
@@ -38,11 +38,42 @@ func Forecast(ctx context.Context, ss *mcp.ServerSession, params *mcp.CallToolPa
 	return &res, nil
 }
 
+// GridpointForecastResult describes the return type of the GridpointForecast tool.
+type GridpointForecastResult = noaa.GridpointForecastResponse
+
+// GridpointForecast returns a detailed 7 day weather forecast for a location with raw timeseries data.
+func GridpointForecast(ctx context.Context, ss *mcp.ServerSession, params *mcp.CallToolParamsFor[ForecastParams]) (*mcp.CallToolResultFor[GridpointForecastResult], error) {
+	var res mcp.CallToolResultFor[GridpointForecastResult]
+
+	forecast, err := noaa.GridpointForecast(params.Arguments.Latitude, params.Arguments.Longitude)
+	if err != nil {
+		return nil, err
+	}
+	res.StructuredContent = *forecast
+
+	return &res, nil
+}
+
 func main() {
 	flag.Parse()
 
-	server := mcp.NewServer(&mcp.Implementation{Name: "mcp-nws", Title: "US National Weather Service MCP Server", Version: "v1.0.0"}, nil)
-	mcp.AddTool(server, &mcp.Tool{Name: "Forecast", Description: "7d Weather Forecast"}, Forecast)
+	server := mcp.NewServer(
+		&mcp.Implementation{
+			Name:    "mcp-nws",
+			Title:   "US National Weather Service MCP Server",
+			Version: "v1.0.0",
+		},
+		nil,
+	)
+	mcp.AddTool(server, &mcp.Tool{Name: "Forecast", Description: "Basic 7 Day Weather Forecast"}, Forecast)
+	mcp.AddTool(
+		server,
+		&mcp.Tool{
+			Name:        "GridpointForecast",
+			Description: "Detailed 7 Day Weather Forecast with Raw Timeseries Data",
+		},
+		GridpointForecast,
+	)
 
 	if *httpAddr != "" {
 		handler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server {
