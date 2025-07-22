@@ -38,6 +38,22 @@ func Forecast(ctx context.Context, ss *mcp.ServerSession, params *mcp.CallToolPa
 	return &res, nil
 }
 
+// HourlyForecastResult describes the return type of the HourlyForecast tool.
+type HourlyForecastResult = noaa.HourlyForecastResponse
+
+// HourlyForecast returns a standard hourly weather forecast for a location covering 7 days.
+func HourlyForecast(ctx context.Context, ss *mcp.ServerSession, params *mcp.CallToolParamsFor[ForecastParams]) (*mcp.CallToolResultFor[HourlyForecastResult], error) {
+	var res mcp.CallToolResultFor[HourlyForecastResult]
+
+	forecast, err := noaa.HourlyForecast(params.Arguments.Latitude, params.Arguments.Longitude)
+	if err != nil {
+		return nil, err
+	}
+	res.StructuredContent = *forecast
+
+	return &res, nil
+}
+
 // GridpointForecastResult describes the return type of the GridpointForecast tool.
 type GridpointForecastResult = noaa.GridpointForecastResponse
 
@@ -66,6 +82,7 @@ func main() {
 		nil,
 	)
 	mcp.AddTool(server, &mcp.Tool{Name: "Forecast", Description: "Basic 7 Day Weather Forecast"}, Forecast)
+	mcp.AddTool(server, &mcp.Tool{Name: "HourlyForecast", Description: "Basic Hourly 7 Day Weather Forecast"}, GridpointForecast)
 	mcp.AddTool(
 		server,
 		&mcp.Tool{
