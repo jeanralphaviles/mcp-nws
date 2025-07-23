@@ -2,6 +2,7 @@ package forecast
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -63,6 +64,19 @@ func TestForecast(t *testing.T) {
 		if (err != nil) != c.err || got != c.expected {
 			t.Errorf("Expected Forecast() = (%v, %v), got (%v, %v)", c.expected, "error", result, err)
 		}
+		if result != nil {
+			content, ok := result.Content[0].(*mcp.TextContent)
+			if !ok {
+				t.Errorf("Error: result.Content[0] is not of type *mcp.TextContent")
+			}
+			structuredContent, err := json.Marshal(result.StructuredContent)
+			if err != nil {
+				t.Errorf("Error JSON marshalling StructuredContent: %v", err)
+			}
+			if content.Text != string(structuredContent) {
+				t.Errorf("result.Content should match result.StructuredContent. %v != %v", content.Text, string(structuredContent))
+			}
+		}
 	}
 }
 
@@ -89,6 +103,19 @@ func TestHourlyForecast(t *testing.T) {
 		if (err != nil) != c.err || got != c.expected {
 			t.Errorf("Expected HourlyForecast() = (%v, %v), got (%v, %v)", c.expected, "error", result, err)
 		}
+		if result != nil {
+			content, ok := result.Content[0].(*mcp.TextContent)
+			if !ok {
+				t.Errorf("Error: result.Content[0] is not of type *mcp.TextContent")
+			}
+			structuredContent, err := json.Marshal(result.StructuredContent)
+			if err != nil {
+				t.Errorf("Error JSON marshalling StructuredContent: %v", err)
+			}
+			if content.Text != string(structuredContent) {
+				t.Errorf("result.Content should match result.StructuredContent. %v != %v", content.Text, string(structuredContent))
+			}
+		}
 	}
 }
 
@@ -114,6 +141,19 @@ func TestGridpointForecast(t *testing.T) {
 		}
 		if (err != nil) != c.err || got != c.expected {
 			t.Errorf("Expected GridpointForecast() = (%v, %v), got (%v, %v)", c.expected, "error", result, err)
+		}
+		if result != nil {
+			content, ok := result.Content[0].(*mcp.TextContent)
+			if !ok {
+				t.Errorf("Error: result.Content[0] is not of type *mcp.TextContent")
+			}
+			structuredContent, err := json.Marshal(result.StructuredContent)
+			if err != nil {
+				t.Errorf("Error JSON marshalling StructuredContent: %v", err)
+			}
+			if content.Text != string(structuredContent) {
+				t.Errorf("result.Content should match result.StructuredContent. %v != %v", content.Text, string(structuredContent))
+			}
 		}
 	}
 }

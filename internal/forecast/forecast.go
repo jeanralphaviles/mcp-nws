@@ -3,6 +3,7 @@ package forecast
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/icodealot/noaa"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -26,6 +27,13 @@ func Forecast(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolPar
 	if err != nil {
 		return nil, err
 	}
+
+	b, err := json.Marshal(forecast)
+	if err != nil {
+		return nil, err
+	}
+
+	res.Content = []mcp.Content{&mcp.TextContent{Text: string(b)}}
 	res.StructuredContent = *forecast
 
 	return &res, nil
@@ -42,6 +50,13 @@ func HourlyForecast(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallT
 	if err != nil {
 		return nil, err
 	}
+
+	b, err := json.Marshal(forecast)
+	if err != nil {
+		return nil, err
+	}
+
+	res.Content = []mcp.Content{&mcp.TextContent{Text: string(b)}}
 	res.StructuredContent = *forecast
 
 	return &res, nil
@@ -58,6 +73,13 @@ func GridpointForecast(ctx context.Context, _ *mcp.ServerSession, params *mcp.Ca
 	if err != nil {
 		return nil, err
 	}
+
+	b, err := json.Marshal(forecast)
+	if err != nil {
+		return nil, err
+	}
+
+	res.Content = []mcp.Content{&mcp.TextContent{Text: string(b)}}
 	res.StructuredContent = *forecast
 
 	return &res, nil
