@@ -1,5 +1,8 @@
 #!/bin/bash
 # https://modelcontextprotocol.io/specification/2025-03-26/basic/lifecycle
+#
+# Dependencies
+#   * https://github.com/jqlang/jq
 
 SERVER="localhost:3000/mcp"
 
@@ -96,6 +99,33 @@ function forecast() {
 EOF
 }
 
+function hourly_forecast() {
+	local mcp_session_id="$1"
+	local latitude="$2"
+	local longitude="$3"
+	curl \
+		"${SERVER}" \
+		--silent \
+		--request POST \
+		--header 'Accept: application/json, text/event-stream' \
+		--header 'Content-Type: application/json' \
+		--header "Mcp-Session-Id: ${mcp_session_id}" \
+		--data @- <<EOF | sed -n 's/^data: \(.*\)/\1/p' | jq -r .
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "HourlyForecast",
+    "arguments": {
+      "latitude": "${latitude}",
+      "longitude": "${longitude}"
+    }
+  }
+}
+EOF
+}
+
 function gridpoint_forecast() {
 	local mcp_session_id="$1"
 	local latitude="$2"
@@ -125,6 +155,7 @@ EOF
 
 MCP_SESSION_ID="$(initialize)"
 initialized "${MCP_SESSION_ID}"
-# tools_list "${MCP_SESSION_ID}"
+tools_list "${MCP_SESSION_ID}"
 # forecast "${MCP_SESSION_ID}" "37.3918" "-122.0601"
-gridpoint_forecast "${MCP_SESSION_ID}" "37.3918" "-122.0601"
+# hourly_forecast "${MCP_SESSION_ID}" "37.3918" "-122.0601"
+# gridpoint_forecast "${MCP_SESSION_ID}" "37.3918" "-122.0601"
