@@ -46,13 +46,40 @@ can connect to multiple servers:
 ### Run MCP Server with [Streamable HTTP](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#streamable-http) transport
 
 ```shell
-go run cmd/mcp-nws/main.go --address 'localhost:3000'
+go run github.com/jeanralphaviles/mcp-nws/cmd/mcp-nws@latest --address 'localhost:3000'
 ```
 
 ### Run MCP Server with [stdio](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#stdio) transport
 
 ```shell
-go run cmd/mcp-nws/main.go
+go run github.com/jeanralphaviles/mcp-nws/cmd/mcp-nws@latest
+```
+
+## Editor Integration
+
+Follow the MCP setup instructions for your editor of choice:
+
+* [VS Code](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
+* [Claude Code](https://docs.anthropic.com/en/docs/claude-code/mcp)
+* [Cursor](https://docs.cursor.com/context/mcp#installing-mcp-servers)
+* [Windsurf](https://docs.windsurf.com/windsurf/cascade/mcp)
+* [Kiro](https://kiro.dev/docs/mcp/)
+
+```json
+// mcp.json
+{
+    "servers": {
+        "weather": {
+            "command": "go",
+            "args": [
+                "run",
+                "github.com/jeanralphaviles/mcp-nws/cmd/mcp-nws@latest"
+            ],
+            "type": "stdio"
+        }
+    },
+    "inputs": []
+}
 ```
 
 ## Explore
@@ -64,23 +91,6 @@ npx @modelcontextprotocol/inspector
 ```
 
 Alternatively use [mcp.sh](tools/mcp.sh) to instrument this MCP Server.
-
-## Integration
-
-### GitHub Copilot in VS Code (Streamable HTTP)
-
-```json
-// .vscode/mcp.json
-{
- "servers": {
-  "mcp-nws": {
-   "url": "http://localhost:3000",
-   "type": "http"
-  }
- },
- "inputs": []
-}
-```
 
 ## See Also
 

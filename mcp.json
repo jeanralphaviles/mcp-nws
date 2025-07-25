@@ -1,0 +1,13 @@
+{
+    "servers": {
+        "weather": {
+            "command": "go",
+            "args": [
+                "run",
+                "github.com/jeanralphaviles/mcp-nws/cmd/mcp-nws@latest"
+            ],
+            "type": "stdio"
+        }
+    },
+    "inputs": []
+}
