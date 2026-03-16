@@ -1,8 +1,16 @@
 module github.com/jeanralphaviles/mcp-nws
 
-go 1.23.5
+go 1.25.0
 
-require github.com/modelcontextprotocol/go-sdk v0.2.0
+require github.com/modelcontextprotocol/go-sdk v1.4.1
+
+require (
+	github.com/google/jsonschema-go v0.4.2 // indirect
+	github.com/segmentio/asm v1.2.1 // indirect
+	github.com/segmentio/encoding v0.5.4 // indirect
+	golang.org/x/oauth2 v0.36.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
+)
 
 require (
 	github.com/icodealot/noaa v0.0.2

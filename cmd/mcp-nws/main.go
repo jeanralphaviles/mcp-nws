@@ -5,7 +5,6 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/jeanralphaviles/mcp-nws/internal/forecast"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -22,7 +21,7 @@ func main() {
 		&mcp.Implementation{
 			Name:    "mcp-nws",
 			Title:   "US National Weather Service MCP Server",
-			Version: "v1.0.0",
+			Version: "v1.1.0",
 		},
 		nil,
 	)
@@ -46,8 +45,7 @@ func main() {
 			log.Fatalf("HTTP server failed: %v", err)
 		}
 	} else {
-		t := mcp.NewLoggingTransport(mcp.NewStdioTransport(), os.Stderr)
-		if err := server.Run(context.Background(), t); err != nil {
+		if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 			log.Fatalf("Server failed: %s", err)
 		}
 	}
