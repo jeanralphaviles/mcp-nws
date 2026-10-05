@@ -1,6 +1,7 @@
 # National Weather Service MCP Server
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/jeanralphaviles/mcp-nws)](https://pkg.go.dev/github.com/jeanralphaviles/mcp-nws)
+[![CI](https://github.com/jeanralphaviles/mcp-nws/actions/workflows/go.yaml/badge.svg)](https://github.com/jeanralphaviles/mcp-nws/actions/workflows/go.yaml)
 
 The National Weather Service [Model Context
 Protocol (MCP)](https://modelcontextprotocol.io/) server provides weather forecast
