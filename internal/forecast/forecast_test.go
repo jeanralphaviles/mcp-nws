@@ -2,7 +2,6 @@ package forecast
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -10,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/icodealot/noaa"
-	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
 func setupTestServer(t *testing.T, statusCode int, payload string) {
@@ -52,30 +50,15 @@ func TestForecast(t *testing.T) {
 	} {
 		setupTestServer(t, c.status, `{"periods":[{"temperature":{"value":75}}]}`)
 
-		params := &mcp.CallToolParamsFor[ForecastParams]{
-			Arguments: ForecastParams{Latitude: "37.3918", Longitude: "-122.0601"},
-		}
+		params := ForecastParams{Latitude: "37.3918", Longitude: "-122.0601"}
 
-		result, err := Forecast(context.Background(), nil, params)
+		_, output, err := Forecast(context.Background(), nil, params)
 		got := -1.0
-		if result != nil && len(result.StructuredContent.Periods) > 0 {
-			got = result.StructuredContent.Periods[0].Temperature
+		if output != nil && len(output.Periods) > 0 {
+			got = output.Periods[0].Temperature
 		}
 		if (err != nil) != c.err || got != c.expected {
-			t.Errorf("Expected Forecast() = (%v, %v), got (%v, %v)", c.expected, "error", result, err)
-		}
-		if result != nil {
-			content, ok := result.Content[0].(*mcp.TextContent)
-			if !ok {
-				t.Errorf("Error: result.Content[0] is not of type *mcp.TextContent")
-			}
-			structuredContent, err := json.Marshal(result.StructuredContent)
-			if err != nil {
-				t.Errorf("Error JSON marshalling StructuredContent: %v", err)
-			}
-			if content.Text != string(structuredContent) {
-				t.Errorf("result.Content should match result.StructuredContent. %v != %v", content.Text, string(structuredContent))
-			}
+			t.Errorf("Expected Forecast() = (%v, %v), got (%v, %v)", c.expected, "error", output, err)
 		}
 	}
 }
@@ -91,30 +74,15 @@ func TestHourlyForecast(t *testing.T) {
 	} {
 		setupTestServer(t, c.status, `{"periods":[{"temperature":{"value":75}}]}`)
 
-		params := &mcp.CallToolParamsFor[ForecastParams]{
-			Arguments: ForecastParams{Latitude: "37.3918", Longitude: "-122.0601"},
-		}
+		params := ForecastParams{Latitude: "37.3918", Longitude: "-122.0601"}
 
-		result, err := HourlyForecast(context.Background(), nil, params)
+		_, output, err := HourlyForecast(context.Background(), nil, params)
 		got := -1.0
-		if result != nil && len(result.StructuredContent.Periods) > 0 {
-			got = result.StructuredContent.Periods[0].Temperature
+		if output != nil && len(output.Periods) > 0 {
+			got = output.Periods[0].Temperature
 		}
 		if (err != nil) != c.err || got != c.expected {
-			t.Errorf("Expected HourlyForecast() = (%v, %v), got (%v, %v)", c.expected, "error", result, err)
-		}
-		if result != nil {
-			content, ok := result.Content[0].(*mcp.TextContent)
-			if !ok {
-				t.Errorf("Error: result.Content[0] is not of type *mcp.TextContent")
-			}
-			structuredContent, err := json.Marshal(result.StructuredContent)
-			if err != nil {
-				t.Errorf("Error JSON marshalling StructuredContent: %v", err)
-			}
-			if content.Text != string(structuredContent) {
-				t.Errorf("result.Content should match result.StructuredContent. %v != %v", content.Text, string(structuredContent))
-			}
+			t.Errorf("Expected HourlyForecast() = (%v, %v), got (%v, %v)", c.expected, "error", output, err)
 		}
 	}
 }
@@ -130,30 +98,15 @@ func TestGridpointForecast(t *testing.T) {
 	} {
 		setupTestServer(t, c.status, `{"temperature":{"values":[{"value":23.88}]}}`)
 
-		params := &mcp.CallToolParamsFor[ForecastParams]{
-			Arguments: ForecastParams{Latitude: "37.3918", Longitude: "-122.0601"},
-		}
+		params := ForecastParams{Latitude: "37.3918", Longitude: "-122.0601"}
 
-		result, err := GridpointForecast(context.Background(), nil, params)
+		_, output, err := GridpointForecast(context.Background(), nil, params)
 		got := -1.0
-		if result != nil && len(result.StructuredContent.Temperature.Values) > 0 {
-			got = result.StructuredContent.Temperature.Values[0].Value
+		if output != nil && len(output.Temperature.Values) > 0 {
+			got = output.Temperature.Values[0].Value
 		}
 		if (err != nil) != c.err || got != c.expected {
-			t.Errorf("Expected GridpointForecast() = (%v, %v), got (%v, %v)", c.expected, "error", result, err)
-		}
-		if result != nil {
-			content, ok := result.Content[0].(*mcp.TextContent)
-			if !ok {
-				t.Errorf("Error: result.Content[0] is not of type *mcp.TextContent")
-			}
-			structuredContent, err := json.Marshal(result.StructuredContent)
-			if err != nil {
-				t.Errorf("Error JSON marshalling StructuredContent: %v", err)
-			}
-			if content.Text != string(structuredContent) {
-				t.Errorf("result.Content should match result.StructuredContent. %v != %v", content.Text, string(structuredContent))
-			}
+			t.Errorf("Expected GridpointForecast() = (%v, %v), got (%v, %v)", c.expected, "error", output, err)
 		}
 	}
 }
