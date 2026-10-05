@@ -19,7 +19,7 @@ type ForecastParams struct {
 type ForecastResponse = noaa.ForecastResponse
 
 // Forecast returns a standard weather forecast for a location covering 14 periods (day and night for 7 days).
-func Forecast(ctx context.Context, req *mcp.CallToolRequest, params ForecastParams) (*mcp.CallToolResult, *ForecastResponse, error) {
+func Forecast(_ context.Context, req *mcp.CallToolRequest, params ForecastParams) (*mcp.CallToolResult, *ForecastResponse, error) {
 	forecast, err := noaa.Forecast(params.Latitude, params.Longitude)
 	if err != nil {
 		return nil, nil, err
@@ -32,7 +32,7 @@ func Forecast(ctx context.Context, req *mcp.CallToolRequest, params ForecastPara
 type HourlyForecastResponse = noaa.HourlyForecastResponse
 
 // HourlyForecast returns a standard hourly weather forecast for a location covering 7 days.
-func HourlyForecast(ctx context.Context, req *mcp.CallToolRequest, params ForecastParams) (*mcp.CallToolResult, *HourlyForecastResponse, error) {
+func HourlyForecast(_ context.Context, req *mcp.CallToolRequest, params ForecastParams) (*mcp.CallToolResult, *HourlyForecastResponse, error) {
 	forecast, err := noaa.HourlyForecast(params.Latitude, params.Longitude)
 	if err != nil {
 		return nil, nil, err
@@ -45,7 +45,7 @@ func HourlyForecast(ctx context.Context, req *mcp.CallToolRequest, params Foreca
 type GridpointForecastResponse = noaa.GridpointForecastResponse
 
 // GridpointForecast returns a detailed 7 day weather forecast for a location with raw timeseries data.
-func GridpointForecast(ctx context.Context, req *mcp.CallToolRequest, params ForecastParams) (*mcp.CallToolResult, *GridpointForecastResponse, error) {
+func GridpointForecast(_ context.Context, req *mcp.CallToolRequest, params ForecastParams) (*mcp.CallToolResult, *GridpointForecastResponse, error) {
 	forecast, err := noaa.GridpointForecast(params.Latitude, params.Longitude)
 	if err != nil {
 		return nil, nil, err
