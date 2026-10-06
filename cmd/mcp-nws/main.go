@@ -21,7 +21,7 @@ func main() {
 		&mcp.Implementation{
 			Name:    "mcp-nws",
 			Title:   "US National Weather Service MCP Server",
-			Version: "v1.1.0",
+			Version: "v1.1.1",
 		},
 		nil,
 	)
